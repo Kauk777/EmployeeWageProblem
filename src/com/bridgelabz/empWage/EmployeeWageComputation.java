@@ -5,21 +5,26 @@ public class EmployeeWageComputation {
 	public static final int IS_PART_TIME = 1;
 	public static final int IS_FULL_TIME = 2;
 
-	 private final String company;
-	 private final int empRatePerHour;
-	 private final int numOfWorkingDays;
-	 private final int maxHoursPerMonth;
-	 private int totalEmpWage;
+	  private int noOfCompany=0;
+	  private EmpWage[] companyEmpWageArray;
+	 
+	  public EmployeeWageComputation() {
+	    companyEmpWageArray=new EmpWage[5];
+	 }
 	  
-	  public EmployeeWageComputation(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth) {
-	    this.company=company;
-	    this.empRatePerHour=empRatePerHour;
-	    this.numOfWorkingDays=numOfWorkingDays;
-	    this.maxHoursPerMonth=maxHoursPerMonth;
-	}
-	public void computeEmpWage() {
-	  int empHrs=0, totalEmpHrs=0, totalWorkingDays=0;
-	  while(totalEmpHrs<=maxHoursPerMonth && totalWorkingDays<numOfWorkingDays) {
+	  private void addCompanyEmpWage(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth) {
+	    companyEmpWageArray[noOfCompany]=new EmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
+	    noOfCompany++;
+	 }
+	  private void computeEmpWage() {
+	    for(int i=0;i<noOfCompany;i++) {
+	      companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
+	      System.out.println(companyEmpWageArray[i]);
+	  }
+	 }
+	 private int computeEmpWage(EmpWage companyEmpWage) {
+	     int empHrs=0, totalEmpHrs=0, totalWorkingDays=0;
+	     while (totalEmpHrs<=companyEmpWage.maxHoursPerMonth && totalWorkingDays<companyEmpWage.numOfWorkingDays) {
 	     totalWorkingDays++;
 	     int empCheck = (int)Math.floor(Math.random() * 10)%3;
 	     switch (empCheck) {
@@ -35,18 +40,14 @@ public class EmployeeWageComputation {
 	     totalEmpHrs+=empHrs;
 	     System.out.println("Day#: "+totalWorkingDays+" Emp Hr: "+empHrs);
 	   }
-	    totalEmpWage=totalEmpHrs*empRatePerHour;
-	}
-	public String toString() {
-	    return "Total Emp Wage for Company: "+company+" is: "+totalEmpWage;
-	}
-	public static void main(String[] args) {
-	    EmployeeWageComputation dMart=new EmployeeWageComputation("DMart", 20, 2, 10);
-	    EmployeeWageComputation reliance=new EmployeeWageComputation("Reliance", 10, 4, 20);
-	    dMart.computeEmpWage();
-	    System.out.println(dMart);
-	    reliance.computeEmpWage();
-	    System.out.println(reliance);
+	   return totalEmpHrs*companyEmpWage.empRatePerHour;
+	 }
+	 public static void main(String[] args) {
+		EmployeeWageComputation empWageMul=new EmployeeWageComputation();
+	    empWageMul.addCompanyEmpWage("DMart", 20, 2, 10);
+	    empWageMul.addCompanyEmpWage("Reliance", 10, 4, 20);
+	    empWageMul.addCompanyEmpWage("BigBasket", 30, 6, 25);
+	    empWageMul.computeEmpWage();
 	}
 
 }
